@@ -1,25 +1,40 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import CharacterCount from './CharacterCount';
+import CharacterCount22 from './CharacterCount22';
+
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+
+const textValue = atom({
+	key: 'textValue',
+	default: 'defaulttext',
+})
+
+function PersistenceObserver() {
+  useTransactionObservation_UNSTABLE(({atomValues, atomInfo, modifiedAtoms}) => {
+    for (const modifiedAtom of modifiedAtoms) {
+      Storage.setItem(
+        modifiedAtom,
+        JSON.stringify({value: atomValues.get(modifiedAtom)}),
+      );
+    }
+  });
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RecoilRoot initializeState={initializeState}>
+      {/* <PersistenceObserver /> */}
+      <CharacterCount />
+      <CharacterCount22 />
+    </RecoilRoot>
   );
 }
 
